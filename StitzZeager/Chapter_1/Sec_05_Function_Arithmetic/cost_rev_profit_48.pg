@@ -1,5 +1,5 @@
 ## DESCRIPTION
-## Cost, Revenue and Profit Fromulas
+## Cost, Revenue and Profit Formulas
 ## ENDDESCRIPTION
 
 ## DBsubject(Algebra)
@@ -25,7 +25,6 @@ loadMacros(
 "MathObjects.pl",
 "AnswerFormatHelp.pl",
 "PGML.pl",
-"PGcourse.pl",
 );
 
 TEXT(beginproblem());
@@ -40,15 +39,17 @@ Context("Numeric");
 
 $a = random(16,20,1);
 $b = random(220,270,10);
-$cost = Formula("$a x + $b");
-$price = Formula("90-3x");
+$cost = Compute("$a x + $b");
+$av_cost = Compute("$cost/x");
+$price = Compute("90-3x");
+$revenue = Compute("x * $price");
+$profit = Compute("$revenue - $cost");
 
 $answer1 = Compute("$b");
-$answer2 = Compute(Formula("($a*10+$b)/10"))->reduce();
+$answer2 = $av_cost->eval(x => 10)->cmp();
 $answer3 = 75;
-$answer4 = Compute(Formula("($cost)x"))->reduce();
-$answer5 = Compute("($cost)x - ($price)")->reduce();
-$answer6 = 0;
+$answer4 = $revenue->cmp();
+$answer5 = $profit->cmp();
 
 
 ###########################
@@ -56,10 +57,10 @@ $answer6 = 0;
 
 BEGIN_PGML
 
-The cost, in cents, to produce x cups of Mountain Thunder Lemonade at Junior's Lemonade
-Stand is [` C(x) = [$cost] `] and the price-demand function, in cents per cup, is [` p(x) = [$price] `].
+The cost, in cents, to produce [` x `] cups of Mountain Thunder Lemonade at Junior's Lemonade
+Stand is [` C(x) = [$cost] `] and the price-demand function, in cents per cup, is [` p(x) = [$price] `], for [` 0 < x < 30 `].
 
-a. Find [`C(0)`].], the cost to make no cups of lemonade at all.  (This is often called _overhead_.)
+a. Find [`C(0)`], the cost to make no cups of lemonade at all.  (This is often called _overhead_.)
     + [___________]{$answer1}
 
 b. Find [` \bar{C}(10) `], the average cost per cup when Junior makes 10 cups.
@@ -80,9 +81,19 @@ END_PGML
 #  Solution
 
 BEGIN_PGML_SOLUTION
-Solution explanation goes here.
+a. [` C(0) = [$a] \times 0 + [$b] = [$b]`].
+
+b. [` \bar{C}(10) = \frac{[$a] \times 10 + [$b]}{10} = \frac{450}{10} = 45`].
+
+c. [` p(5) = 90 - 3 \times 5 = 90 - 15 = 75 `].
+
+d. Revenue is the number you sell multiplied by the price you sell at, so:
+>> [`` R(x) = [$revenue->TeX()] ``]. <<
+
+e. Profit is revenue minus cost, so:
+>> [`` P(x) = [$profit->TeX()] ``]. <<
 END_PGML_SOLUTION
 
 COMMENT('MathObject version. Uses PGML.');
 
-ENDDOCUMENT();
+ENDDOCUMENT();    
